@@ -68,4 +68,18 @@ python experiment.py
 Inter-message latency = wall-clock time between consecutive WebSocket message arrivals at the local client. Captures combined network transit time + exchange processing delay.
 
 ### Anomaly detection — Rolling Z-Score
+For each message i, compute the z-score relative to the preceding 50-message window:
 
+z[i] = (latency[i] - rolling_mean[i]) / rolling_std[i]
+
+Messages with |z| > 3 are flagged as anomalous spikes. This is standard Statistical Process Control (SPC) used in production latency monitoring.
+
+### Why Mann-Whitney U?
+Latency distributions have heavy right tails. Mann-Whitney U is non-parametric — tests whether one distribution is stochastically greater than another without assuming normality. Correct choice for tail-heavy latency data.
+
+### Before/After experiment design
+The collected stream is split at its midpoint into a before baseline and after post-change segment. In production, messages would be tagged with an explicit phase flag at the moment a config change is deployed.
+
+---
+
+*Venkata Aditya Kantipudi — [github.com/AdityaVenkata/market-latency-profiler](https://github.com/AdityaVenkata/market-latency-profiler)*
