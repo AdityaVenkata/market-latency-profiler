@@ -11,7 +11,7 @@ from pathlib import Path
 
 import websockets
 
-WS_URL = "wss://advanced-trade-ws-public.coinbase.com/ws/market"
+WS_URL = "wss://advanced-trade-ws.coinbase.com"
 DATA_DIR = Path("data")
 DATA_DIR.mkdir(exist_ok=True)
 
@@ -20,7 +20,7 @@ async def stream(product: str, duration: int, outfile: Path):
     subscribe_msg = json.dumps({
         "type": "subscribe",
         "product_ids": [product],
-        "channel": "level2",
+        "channel": "ticker",
     })
 
     print(f"[collector] Connecting to Coinbase WebSocket...")
@@ -49,7 +49,7 @@ async def stream(product: str, duration: int, outfile: Path):
                 arrival_ts = time.time()
                 msg = json.loads(raw)
 
-                if msg.get("channel") != "l2_data":
+                if msg.get("channel") != "ticker":
                     continue
 
                 for event in msg.get("events", []):
