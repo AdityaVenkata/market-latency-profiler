@@ -11,7 +11,7 @@ from pathlib import Path
 
 import websockets
 
-WS_URL = "wss://advanced-trade-ws.coinbase.com"
+WS_URL = "wss://advanced-trade-ws-public.coinbase.com/ws/market"
 DATA_DIR = Path("data")
 DATA_DIR.mkdir(exist_ok=True)
 
